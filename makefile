@@ -1,5 +1,5 @@
 # Makefile
-Gh:	y.tab.c
+Gh:	y.tab.c lex.yy.c
 	$(CC) y.tab.c -ly -ll -o Gh
 y.tab.c:	Gh.y
 	$(YACC) Gh.y

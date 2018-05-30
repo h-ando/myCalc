@@ -9,8 +9,11 @@ reg	S[0-9]
 \-	{ return MINUS; }
 \*	{ return ASTERISK; }
 \/	{ return SLASH; }
+%	{ return PERCENT; }
+\^	{ return CIRCUMFLEX; }
 \(	{ return LP; }
 \)	{ return RP; }
+\=	{ return EQUAL; }
 \n	{ return EOLN; }
 ([ ]|\t)*	{ /* nop */ }
 %%

@@ -3,6 +3,7 @@
 #include <string.h>
 
 int s[10] = { 0 };
+int i, n, res;
 %}
 %start	S
 %token	EOLN PLUS MINUS ASTERISK SLASH PERCENT CIRCUMFLEX LP RP EQUAL
@@ -17,34 +18,55 @@ Sent	: E
 	| REGISTER EQUAL E
 	  { printf("%d\n", s[$1] = $3); }
 	;
-E	: E PLUS T
+E	: E PLUS T0
 	  { $$ = $1 + $3; }
-	| E MINUS T
+	| E MINUS T0
 	  { $$ = $1 - $3; }
-	| PLUS T
+/*
+	| PLUS T0
 	  { $$ = +$2; }
-	| MINUS T
+	| MINUS T0
 	  { $$ = -$2; }
-	| T
+*/
+	| T0
 	  { $$ = $1; }
 	;
-T	: T ASTERISK F
+T0	: T0 ASTERISK T1
 	  { $$ = $1 * $3; }
-	| T SLASH F
+	| T0 SLASH T1
 	  { $$ = $1 / $3; }
-	| T PERCENT F
+	| T0 PERCENT T1
 	  { $$ = $1 % $3; }
-	| F
+	| T1
 	  { $$ = $1; }
 	;
-F	: NUMBER
+T1	: T1 CIRCUMFLEX F0
+	  { 
+	    n = $1, res = 1;
+	    
+	    for (i = 1; i <= $3; i <<= 1) {
+	      
+	      if ($3 & i) {
+	        res *= n;
+	      }
+	      
+	      n *= n;
+	    }
+	    
+	    $$ = res;
+	  }
+	| F0
 	  { $$ = $1; }
-	| MINUS NUMBER
+	;
+F0	: F1
+	  { $$ = $1; }
+	| MINUS F1
 	  { $$ = -$2; }
+	;
+F1	: NUMBER
+	  { $$ = $1; }
 	| REGISTER
 	  { $$ = s[$1]; }
-	| MINUS REGISTER
-	  { $$ = -s[$2]; }
 	| LP E RP
 	  { $$ = $2; }
 	;
